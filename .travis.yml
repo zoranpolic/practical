@@ -7,16 +7,16 @@ env:
   - ANSIBLE_VERBOSITY=3
 jobs:
   include:
-  - name: minecraft
-    stage: test
-    script:
-    - cd traditional/minecraft
-    - molecule test
+#  - name: minecraft
+#    stage: test
+#    script:
+#    - cd traditional/minecraft
+#    - molecule test
   - name: minecraft-kubernetes
     script:
     - cd kubernetes
     - molecule test
-  - name: minecraft-kubernetes-operator
-    script:
-    - cd kubernetes
-    - molecule test -s operator
+#  - name: minecraft-kubernetes-operator
+#    script:
+#    - cd kubernetes
+#    - molecule test -s operator
