@@ -3,12 +3,12 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint:
-  name: yamllint
-  options:
-    config-data:
-      line-length:
-        max: 120
+#lint:
+#  name: yamllint
+#  options:
+#    config-data:
+#      line-length:
+#        max: 120
 platforms:
 - name: kind-default
   groups:
@@ -25,8 +25,8 @@ platforms:
 provisioner:
   name: ansible
   log: True
-  lint:
-    name: ansible-lint
+#  lint:
+#    name: ansible-lint
   inventory:
     group_vars:
       all:
@@ -43,5 +43,5 @@ scenario:
   name: default
 verifier:
   name: ansible
-  lint:
-    name: ansible-lint
+#  lint:
+#    name: ansible-lint
