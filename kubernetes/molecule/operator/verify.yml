@@ -1,0 +1,32 @@
+---
+
+- name: Verify
+  hosts: localhost
+  connection: local
+  vars:
+    ansible_python_interpreter: '{{ ansible_playbook_python }}'
+  tasks:
+  - block:
+    - import_tasks: tasks/test_working_defaults.yml
+      vars:
+        name: test-working-defaults
+
+    - import_tasks: tasks/test_eula_required.yml
+      vars:
+        name: test-no-eula
+    rescue:
+    - name: Get Minecrafts
+      k8s_facts:
+        api_version: '{{ api_version }}'
+        kind: '{{ kind }}'
+        label_selectors:
+          - game=minecraft
+      register: minecrafts
+
+    - name: Output Minecrafts
+      debug:
+        var: minecrafts
+
+    - name: Fail out
+      fail:
+        msg: "Failed in verify.yml"
