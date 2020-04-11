@@ -9,12 +9,15 @@ script:
   - docker run -d --name kube --privileged -p 8443:8443 -p 10080:10080 bsycorp/kind:latest-1.15
   - until curl -s --fail http://127.0.0.1:10080/docker-ready; do
     sleep 1;
+    kubectl cluster-info
     done
   - until curl -s --fail http://127.0.0.1:10080/kubernetes-ready; do
     sleep 1;
+    kubectl cluster-info
     done
   - until curl -s --fail http://127.0.0.1:10080/config; do
     sleep 1;
+    kubectl cluster-info
     done
   - echo "Kubernetes ready - run tests!"
   - curl http://127.0.0.1:10080/config > ./kube-config
