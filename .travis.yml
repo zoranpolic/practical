@@ -18,9 +18,25 @@ before_script:
   - sudo apt-get install -y kubectl
   #  - && \
   #    chmod +x kubectl && sudo mv kubectl /usr/local/bin/
-  - curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && \
-    chmod +x minikube && sudo mv minikube /usr/local/bin/
-  - sudo minikube start --vm-driver=none --kubernetes-version=v1.7.0
+  - curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_1.9.2-0_amd64.deb
+  - sudo dpkg -i minikube_1.9.2-0_amd64.deb
+  #  - && \
+  #    chmod +x minikube && sudo mv minikube /usr/local/bin/
+  - sudo minikube start --vm-driver=none --kubernetes-version=v1.16.1
   - minikube update-context
-  - JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; \
-    until kubectl get nodes -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1; done
+  #  - JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; \
+  #    until kubectl get nodes -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1; done
+  - until curl -s --fail http://127.0.0.1:10080/docker-ready; do
+    sleep 1;
+    done
+  - until curl -s --fail http://127.0.0.1:10080/kubernetes-ready; do
+    sleep 1;
+    done
+  - until curl -s --fail http://127.0.0.1:10080/config; do
+    sleep 1;
+    done
+  - echo "Kubernetes ready - run tests!"
+  - curl http://127.0.0.1:10080/config > ./kube-config
+  - export KUBECONFIG=./kube-config
+  - kubectl config set clusters.kubernetes.server https://127.0.0.1:8443
+  - kubectl cluster-info
